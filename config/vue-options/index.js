@@ -1,10 +1,14 @@
 /**
- ***********************************
- * DEFAULT META FOR ALL PAGES ONLY *
- ***********************************
+ *******************************
+ * DEFAULTS FOR ALL PAGES ONLY *
+ *******************************
  */
 
 module.exports = {
+	cacheOptions: {
+		max: 1,
+		maxAge: 1
+	},
 	metas: [
 		{ name: 'application-name', content: 'Name of my application' },
 		{ name: 'description', content: 'A description of the page', id: 'desc' }, // id to replace intead of create element
