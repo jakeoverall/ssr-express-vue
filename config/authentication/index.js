@@ -12,6 +12,7 @@ Object.keys(authClients).forEach(setupAuth)
 function setupAuth(c) {
 	var client = authClients[c]
 	client.passReqToCallback = true
+	client.callbackURL = 'http://localhost:9000/auth/' + c + '/callback'
 
 	if (c == 'local') {
 		return setupLocal(client)
@@ -127,6 +128,6 @@ module.exports = {
 		app.use(passport.initialize())
 		app.use(passport.session())
 
-		app.use(authRoutes)
+		app.use(authRoutes.getRoutes(app, passport, authClients))
 	}
 }

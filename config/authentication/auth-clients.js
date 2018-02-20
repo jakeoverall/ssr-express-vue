@@ -8,7 +8,8 @@ module.exports = {
 	google: {
 		clientID: 'your-secret-clientID-here',
 		clientSecret: 'your-client-secret-here',
-		strategy: require('passport-google-oauth').OAuth2Strategy
+		strategy: require('passport-google-oauth').OAuth2Strategy,
+		scope: { scope: ['profile', 'email'] }
 	}
 	// ,
 	// facebook: {
