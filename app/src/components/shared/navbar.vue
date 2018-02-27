@@ -1,6 +1,7 @@
 <template>
-	<div id="navbar">
-		I AM THE NAVBAR {{user.name}}
+	<div class="navbar sticky">
+		
+		
 	</div>
 </template>
 

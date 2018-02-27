@@ -10,6 +10,7 @@ module.exports = {
 		maxAge: 1
 	},
 	metas: [
+		{ name: 'viewport', content: 'width=device-width, initial-scale=1' },
 		{ name: 'application-name', content: 'Name of my application' },
 		{ name: 'description', content: 'A description of the page', id: 'desc' }, // id to replace intead of create element
 		// ...

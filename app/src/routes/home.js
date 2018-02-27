@@ -5,9 +5,10 @@ module.exports = {
 	routes: [{
 		reqType: 'get',
 		path: '',
+		name: 'Home',
 		method(req, res, next) {
 			var data = {
-				user: { name: 'from server' }
+				user: req.user || {}
 			}
 			req.vueOptions = layouts.main({
 				title: 'Welcome Home',
@@ -21,6 +22,7 @@ module.exports = {
 	}, {
 		reqType: 'get',
 		path: 'about',
+		name: 'Home',
 		method(req, res, next) {
 			var data = {
 				testVal: 'from home route'
@@ -33,6 +35,20 @@ module.exports = {
 			})
 
 			res.renderVue('about.vue', data, req.vueOptions)
+		}
+	}, {
+		reqType: 'get',
+		path: 'auth',
+		name: 'Auth',
+		method(req, res, next) {
+			var data = {user: req.user}
+			req.vueOptions = layouts.main({
+				title: 'CodeWorks Student Login',
+				metas: [
+					{ name: 'description', content: 'Student login and registration. Start your coding adventure today!' }
+				]
+			})
+			res.renderVue('auth.vue', data, req.vueOptions)
 		}
 	}]
 }

@@ -4,15 +4,16 @@
 		<div class="component-mount">
 			<slot ref="slotcomponent"></slot>
 		</div>
-		<div>FOOTER {{user.name}}</div>
+		<footer-comp></footer-comp>
 	</div>
 </template>
 
 <script>
 	import navbar from './navbar.vue'
+	import footerComp from './footer.vue'
 	export default {
 		name: 'main-layout',
-		components: { navbar },
+		components: { navbar, footerComp },
 		data() {
 			return {
 				user: {}

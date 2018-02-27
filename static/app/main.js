@@ -1,5 +1,12 @@
 // INJECTED INTO EVERY ROUTE
 (function () {
+
+	var server = axios.create({
+		baseURL: window.location.origin,
+		useCredentials: true,
+		timeout: 5000
+	})
+
 	var store = new $TinyStore({
 		state: {
 			user: { name: 'tiny store' }
@@ -24,6 +31,27 @@
 				}).then(function (res) {
 					return store.commit('user', res.data)
 				})
+			},
+			register(payload) {
+				server.post('/auth/register', payload)
+					.then(res => {
+						window.location = '/'
+					})
+					.catch(err => {
+						$store.dispatch('error', err)
+					})
+			},
+			login(payload) {
+				server.post('/auth/login', payload)
+					.then(res => {
+						window.location = '/'
+					})
+					.catch(err => {
+						$store.dispatch('error', err)
+					})
+			},
+			error(err) {
+				console.log('ERROR', err)
 			}
 		}
 	})

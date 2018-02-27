@@ -10,6 +10,7 @@ module.exports = function (config) {
 				metas: [...config.metas],
 				scripts: [
 					{ src: 'https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.0.3/socket.io.js' },
+					{ src: 'https://cdnjs.cloudflare.com/ajax/libs/axios/0.18.0/axios.min.js' },
 					{ src: '/app/tiny-redux.js' },
 					{ src: '/app/main.js' },
 					...config.scripts
@@ -19,6 +20,7 @@ module.exports = function (config) {
 					{ style: 'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css' },
 					{ style: 'https://fonts.googleapis.com/icon?family=Material+Icons' },
 					{ style: 'https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300' },
+					{ style: '/assets/styles/main.min.css' },
 					...config.styles
 				]
 			}

@@ -23,25 +23,25 @@ let schema = new Schema({
 
 })
 
-schema.pre('save', function (next) {
-	var user = this;
-	if (!user.isModified('local.password')) {
-		return next();
-	}
-	bcrypt.genSalt(SALT_FACTOR, function (err, salt) {
-		if (err) {
-			return next(err);
-		} else {
-			bcrypt.hash(user.local.password, salt, function (err, hash) {
-				user.local.password = hash;
-				next();
-			});
-		}
-	});
-});
+// schema.pre('save', function (next) {
+// 	var user = this;
+// 	if (!user.isModified('local.password')) {
+// 		return next();
+// 	}
+// 	bcrypt.genSalt(SALT_FACTOR, function (err, salt) {
+// 		if (err) {
+// 			return next(err);
+// 		} else {
+// 			bcrypt.hash(user.local.password, salt, function (err, hash) {
+// 				user.local.password = hash;
+// 				next();
+// 			});
+// 		}
+// 	});
+// });
 
 schema.statics.generateHash = function (password) {
-	return bcrypt.hashSync(password, bcrypt.genSaltSync(SALT_FACTOR), null);
+	return bcrypt.hashSync(password, bcrypt.genSaltSync(SALT_FACTOR));
 };
 
 schema.methods.validatePassword = function (password) {
