@@ -6,8 +6,8 @@ module.exports = {
 	}
 	,
 	google: {
-		clientID: 'your-secret-clientID-here',
-		clientSecret: 'your-client-secret-here',
+		clientID: 'CLIENTID',
+		clientSecret: 'CLIENTSECRET',
 		strategy: require('passport-google-oauth').OAuth2Strategy,
 		scope: { scope: ['profile', 'email'] }
 	}
@@ -15,19 +15,16 @@ module.exports = {
 	// facebook: {
 	// 	clientID: 'your-secret-clientID-here',
 	// 	clientSecret: 'your-client-secret-here',
-	// 	callbackURL: '/auth/google/callback'
 	// }
 	// ,
 	// twitter: {
 	// 	clientID: 'your-secret-clientID-here',
 	// 	clientSecret: 'your-client-secret-here',
-	// 	callbackURL: '/auth/google/callback'
 	// }
 	// ,
 	// github: {
 	// 	clientID: 'your-secret-clientID-here',
 	// 	clientSecret: 'your-client-secret-here',
-	// 	callbackURL: '/auth/google/callback'
 	// }
 
 };

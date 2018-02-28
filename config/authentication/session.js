@@ -15,7 +15,7 @@ module.exports = {
 		});
 
 		let session = expressSession({
-			secret: 'YOU SHOULD PROBABLY CHANGE THIS',
+			secret: env.db.secret,
 			cookie: {
 				maxAge: (1000 * 60 * 60 * 24 * 7 * 52) // 1 year
 			},

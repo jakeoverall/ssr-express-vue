@@ -16,7 +16,6 @@ module.exports = {
 					{ name: 'something else', content: 'bla bla' }
 				]
 			})
-			console.log(req.vueOptions.layout)
 			res.renderVue('home.vue', data, req.vueOptions)
 		}
 	}, {

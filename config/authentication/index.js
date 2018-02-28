@@ -31,18 +31,25 @@ function setupAuth(c) {
 							// modify this object to match user schema if necessary
 							var user = {}
 							user[c] = { id: profile.id, ...profile }
-							user.email = profile.email
-							user.displayName = profile.name || profile.displayName || profile.username || profile.email
-							return User.create(user).then(next).catch(next)
+							console.log('PROFILE:', profile)
+							user.email = profile.email || profile.emails && profile.emails[0] && profile.emails[0].value
+							user.displayName = profile.displayName || profile.username || profile.email || profile.name.givenName
+							return User.create(user)
+								.then(u => {
+									next(null, u)
+								}).catch(next)
 						}
 						next(null, doc)
 					})
 					.catch(next)
 			} else {
-				req.user[c] = { id: profile.id, ...profile }
-				req.user.save().then(err => {
-					next(err, req.user)
-				})
+				if(!req.user[c].id){
+					req.user[c] = { id: profile.id, ...profile }
+					return req.user.save().then(err => {
+						next(null, req.user)
+					})
+				}
+				return next(null, req.user)
 			}
 		})
 	}))

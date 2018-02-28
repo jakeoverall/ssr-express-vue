@@ -58,7 +58,7 @@
 											</a>
 										</div>
 										<div>
-											<a href="" class="google-plus">
+											<a href="/auth/google" class="google-plus">
 												<i class="fa fa-fw fa-google-plus" aria-hidden="true"></i>
 											</a>
 										</div>
@@ -89,9 +89,9 @@
 		},
 		mounted() {
 			this.formAction = this.register
-			if(this.user && this.user._id){
-				window.location = '/'
-			}
+			// if(this.user && this.user._id){
+			// 	window.location = '/'
+			// }
 		},
 		methods: {
 			submitForm() {
