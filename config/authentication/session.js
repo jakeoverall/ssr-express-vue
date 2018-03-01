@@ -6,7 +6,7 @@ module.exports = {
 		let store = new MongoDBStore(
 			{
 				uri: env.db.connectionstring,
-				collection: 'Sessions'
+				collection: 'Sessions',
 			});
 
 		// Catch errors 
@@ -14,14 +14,15 @@ module.exports = {
 			console.error(error);
 		});
 
+		// @ts-ignore
 		let session = expressSession({
 			secret: env.db.secret,
 			cookie: {
-				maxAge: (1000 * 60 * 60 * 24 * 7 * 52) // 1 year
+				maxAge: (1000 * 60 * 60 * 24 * 7 * 52), // 1 year
 			},
 			store: store,
 			resave: true,
-			saveUninitialized: true
+			saveUninitialized: false,
 		})
 		app.use(session)
 	}

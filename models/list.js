@@ -1,7 +1,7 @@
 let mongoose = require('mongoose')
 let Schema = mongoose.Schema
 let ObjectId = Schema.Types.ObjectId
-
+let name = 'List'
 
 let schema = new Schema({
   name: String,
@@ -21,27 +21,23 @@ schema.statics.addTodo = function (listId, todoId) {
   })
 }
 
-var model = mongoose.model('list', schema)
-
-
 module.exports = {
-  model,
-  schema: schema,
+  name,
+  schema,
   queries: [
     //custom route handlers
-    {
-      reqType: 'use',
-      url: '/api/lists/:listId',
-      method(req, res, next) {
-        model.findById(req.params.listId).then(list => {
-          req.LIST = list
-          next()
-        })
-        res.status(400).send(new Error('[BAD REQUEST] Invalid ListId'))
-      }
-    }
+    // {
+    //   reqType: 'use',
+    //   url: '/api/lists/:listId',
+    //   method(req, res, next) {
+    //     model.findById(req.params.listId).then(list => {
+    //       req.LIST = list
+    //       next()
+    //     })
+    //     res.status(400).send(new Error('[BAD REQUEST] Invalid ListId'))
+    //   }
+    // }
   ],
-  preventBaseApi: false,
   authLevels: {
     read: 'public',
     write: 'moderator'

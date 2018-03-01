@@ -1,4 +1,4 @@
-var User = require('../../app/models/user')
+var User = require('../../models/user')
 var authClients = require('./auth-clients')
 var passport = require('passport')
 var cookieParser = require('cookie-parser');
@@ -43,7 +43,7 @@ function setupAuth(c) {
 					})
 					.catch(next)
 			} else {
-				if(!req.user[c].id){
+				if (!req.user[c].id) {
 					req.user[c] = { id: profile.id, ...profile }
 					return req.user.save().then(err => {
 						next(null, req.user)
@@ -87,6 +87,7 @@ function setupLocal(client) {
 					displayName: req.body.displayName || req.body.name || email,
 					local: {
 						email: email,
+						// @ts-ignore
 						password: User.generateHash(password)
 					}, ...req.body
 				}).then(user => {
