@@ -13,7 +13,12 @@ var apiRoutes = require('./api')
 module.exports = [
   {
     mount: 'api',
-    // preware(req, res, next) { },
+    preware(req, res, next) {
+      if (req.type == 'POST' && req.user) {
+        req.body.creatorId = req.user._id
+      }
+      next()
+    },
     // outware(req, res, next) { },
     // catcher(err, req, res, next) { },
     router: apiRoutes

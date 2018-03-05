@@ -11,10 +11,5 @@ let schema = new Schema({
 module.exports = {
   name,
   schema,
-  //custom route handlers
-  queries: [],
-  authLevels: {
-    read: 'public',
-    write: 'moderator'
-  }
+  preventDefaultApi: true,
 }

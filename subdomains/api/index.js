@@ -4,11 +4,12 @@ const pluralize = require('pluralize')
 const fs = require('fs');
 
 var router = require('express').Router();
+global.Models = {}
+var Queries = {}
 
+// REGISTERS ALL OF THE MODELS FROM MODELS DIRECTORY
 let files = fs.readdirSync(__dirname + '/../../models');
-console.log(files)
 files.forEach(function (file) {
-
   if (!file.endsWith('.js')) return;
   if (file.endsWith('index.js')) return;
   if (file.endsWith('base-api.js')) return;
@@ -24,24 +25,28 @@ files.forEach(function (file) {
     //REGISTER THE BASEAPI
     let routes = BaseAPI(modelConfig, modelConfig.model)
     Object.keys(routes).forEach(method => {
-      console.log('[BASE API]', `/${modelConfig.endpoint}/:id?`)
       router.route(`/${modelConfig.endpoint}/:id?`)[method](routes[method])
     })
 
-    //LOAD CUSTOM QUERY ROUTES
-    modelConfig.queries = modelConfig.queries || []
-    modelConfig.queries.forEach(query => {
-      if (!query.endpoint || !query.reqType || !query.method) { return console.error('[QUERY ERROR] bad query config on model: ', modelConfig.name, query) }
-      query.endpoint = query.endpoint[0] == '/' ? query.endpoint : '/' + query.endpoint
-      var p = modelConfig.endpoint + query.endpoint
-      console.log('[CUSTOM QUERY]:', p)
-      router.route(p)[query.reqType](query.method)
-    })
-
-
+    global.Models[modelConfig.endpoint] = modelConfig.model
+    if (modelConfig.queries) {
+      Queries[modelConfig.endpoint] = modelConfig.queries
+    }
   } catch (e) {
     console.error('[MODEL ERROR] unable to load model in ', file)
   }
 });
+
+//LOAD CUSTOM QUERY ROUTES AFTER ALL MODELS REGISTERED
+Object.keys(Queries).forEach(k => {
+  try {
+    Queries[k].forEach(query => {
+      if (!query.endpoint || !query.reqType || !query.method) { return console.error('[QUERY ERROR] bad query config on model: ', modelConfig.name, query) }
+      router.route(query.endpoint)[query.reqType](query.method)
+    })
+  } catch (e) {
+    console.error('[MODEL QUERIES ERROR] unable to load queries for ', k)
+  }
+})
 
 module.exports = router

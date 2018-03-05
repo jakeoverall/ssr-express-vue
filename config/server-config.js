@@ -17,7 +17,7 @@ module.exports = {
 		useSessions: true,
 		port: process.env.PORT || 9000,
 		db: {
-			connectionstring: 'mongodb://test:test@ds044907.mlab.com:44907/delete-me',
+			connectionstring: 'mongodb://<username>:<password>@<server>',
 			secret: 'A VERY special PHRASE Works Best when SETTING TH!$'
 		},
 		watch: {

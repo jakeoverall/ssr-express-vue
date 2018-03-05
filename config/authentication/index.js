@@ -12,6 +12,7 @@ Object.keys(authClients).forEach(setupAuth)
 function setupAuth(c) {
 	var client = authClients[c]
 	client.passReqToCallback = true
+	//TODO: Set AUTH DOMAIN
 	client.callbackURL = 'http://localhost:9000/auth/' + c + '/callback'
 
 	if (c == 'local') {

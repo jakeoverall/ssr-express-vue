@@ -16,19 +16,20 @@ function API(modelConfig, schema) {
   }
 
   function hasAccess(req, action, type, next, cb) {
-    // if (model.accessLevel[type] == 'any') {
-    //   return cb({ auth: 'open' })
-    // }
-    // Users.findById(req.session.uid).then(user => {
-    //   req.session.uid && user && user.hasAccess(model.accessLevel[type]) ? cb(user) : next(handleResponse(action, null, { error: 'Not Authorized' }))
-    // })
+    if (!modelConfig.authLevels || !modelConfig.authLevels[type] || modelConfig.authLevels[type] == 'public') {
+      return cb(req.user)
+    }
+    if (req.user && req.user.hasAccess(modelConfig.authLevels[type])) {
+      return cb(req.user)
+    }
+    return next(handleResponse(action, null, new Error('Invalid Permission')))
   }
 
   function get(req, res, next) {
     var id = req.params.id || req.query.id || '';
     var params = req.params.id ? req.params : {};
     var query = req.query.with || '';
-    // hasAccess(req, actions.find, 'read', next, () => {
+    hasAccess(req, actions.find, 'read', next, () => {
       if (id) {
         schema.findById(id)
           .populate(query)
@@ -41,7 +42,11 @@ function API(modelConfig, schema) {
 
       } else {
         if (modelConfig.restrictOwnerQuery) {
-          params = { creatorId: req.session.uid }
+          if (req.user) {
+            params = { creatorId: req.user._id }
+          } else {
+            return next(handleResponse(actions.findAll, null, new Error('Invalid Permission')))
+          }
         }
 
         schema.find(params, query)
@@ -56,27 +61,23 @@ function API(modelConfig, schema) {
             return next(handleResponse(actions.findAll, null, error))
           })
       }
-    // })
+    })
   }
 
   function create(req, res, next) {
     var action = actions.create
-    console.log(req.body)
     hasAccess(req, action, 'write', next, () => {
-      try {
-        let model = new schema(req.body)
-        model.creatorId = req.session.uid
-        model.save()
-          .then(data => {
-            return res.send(handleResponse(action, data))
-          })
-          .catch(error => {
-            return next(handleResponse(action, null, error))
-          })
+      let model = new schema(req.body)
+      if (req.user) {
+        model.creatorId = req.user._id
       }
-      catch (e) {
-        console.log(e)
-      }
+      model.save()
+        .then(data => {
+          return res.send(handleResponse(action, data))
+        })
+        .catch(error => {
+          return next(handleResponse(action, null, error))
+        })
     })
   }
 
@@ -85,7 +86,7 @@ function API(modelConfig, schema) {
     var id = req.params.id || req.query.id || '';
 
     if (!id) {
-      return next(handleResponse(action, null, { error: { message: 'Invalid request no id provided' } }))
+      return next(handleResponse(action, null, new Error('Invalid request no id provided')))
     }
     hasAccess(req, action, 'write', next, () => {
       schema.findOneAndUpdate({ _id: id }, req.body)
@@ -102,19 +103,19 @@ function API(modelConfig, schema) {
     var action = actions.remove
     var id = req.params.id || req.query.id || '';
 
-    if (!id || modelConfig.noRemove) {
-      return next(handleResponse(action, null, { error: { message: 'Invalid request no id provided' } }))
+    if (!id || modelConfig.preventRemove) {
+      return next(handleResponse(action, null, new Error('Invalid request no id provided')))
     }
 
     hasAccess(req, action, 'write', next, (u) => {
       schema.findById(id).then(function (data) {
-        if (data.creatorId == req.session.uid || u.role != 'student') {
+        if (data.creatorId == req.user._id || u.role != 'student') {
           schema.findById(id).then(model => {
             model.remove()
             res.send(handleResponse(action, { message: 'Successfully removed' }))
           })
         } else {
-          return res.status(401).send(handleResponse(action, null, { error: 'Invalid Access' }))
+          return res.status(401).send(handleResponse(action, null, new Error('Invalid Access')))
         }
       })
         .catch(error => {
@@ -130,7 +131,9 @@ function API(modelConfig, schema) {
       data: data
     }
     if (error) {
-      response.error = error
+      error.details = response
+      return error
+
     }
     return response
   }

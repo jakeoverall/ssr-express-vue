@@ -25,7 +25,8 @@ app.use(function handleError(err, req, res, next) {
 		error: {
 			name: err.name,
 			message: err.message,
-			text: err.toString()
+			text: err.toString(),
+			details: err.details
 		}
 	};
 	var statusCode = err.status || 400;
